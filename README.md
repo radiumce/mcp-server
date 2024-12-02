@@ -2,7 +2,7 @@
 
 This repository contains the source code for the E2B MCP server.
 
-See my X post for demo: https://x.com/mishushakov/status/1841144648188321144
+See my X post for demo: https://x.com/mishushakov/status/1863286108433317958
 
 Available in two editions:
 

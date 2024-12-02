@@ -1,4 +1,4 @@
-# E2B MCP Server (JavaScript)
+# E2B MCP Server (Python)
 
 A Model Context Protocol server for running code in a secure sandbox by E2B.
 
@@ -6,17 +6,7 @@ A Model Context Protocol server for running code in a secure sandbox by E2B.
 
 Install dependencies:
 ```
-npm install
-```
-
-Build the server:
-```
-npm run build
-```
-
-For development with auto-rebuild:
-```
-npm run watch
+uv install
 ```
 
 ## Installation
@@ -29,10 +19,13 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "e2b-server": {
-      "command": "node",
+    "e2b-mcp-server": {
+      "command": "uv",
       "args": [
-        "<absolute-path-to-e2b-server>/js/build/index.js"
+        "--directory",
+        "<absolute-path-to-e2b-server>/python",
+        "run",
+        "e2b-mcp-server"
       ],
       "env": {
         "E2B_API_KEY": "<your-e2b-api-key>"
@@ -47,7 +40,11 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
 
 ```
-npm run inspector
+npx @modelcontextprotocol/inspector \
+  uv \
+  --directory . \
+  run \
+  e2b-mcp-server \
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.

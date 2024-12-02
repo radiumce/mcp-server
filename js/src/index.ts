@@ -30,7 +30,7 @@ class E2BServer {
   constructor() {
     this.server = new Server(
       {
-        name: "e2b-code-interpreter-server",
+        name: "e2b-mcp-server",
         version: "0.1.0",
       },
       {
@@ -87,14 +87,15 @@ class E2BServer {
         );
       }
 
-      if (!toolSchema.safeParse(request.params.arguments).success) {
+      const parsed = toolSchema.safeParse(request.params.arguments);
+      if (!parsed.success) {
         throw new McpError(
           ErrorCode.InvalidParams,
           "Invalid code interpreter arguments"
         );
       }
 
-      const { code } = request.params.arguments as z.infer<typeof toolSchema>;
+      const { code } = parsed.data;
       const { results, logs } = await (this.sandbox as Sandbox).runCode(code);
 
       return {

@@ -1,6 +1,6 @@
 # E2B MCP Server (JavaScript)
 
-A Model Context Protocol server for running code in a secure sandbox by E2B.
+A Model Context Protocol server for running code in a secure sandbox by [E2B](https://e2b.dev).
 
 ## Development
 

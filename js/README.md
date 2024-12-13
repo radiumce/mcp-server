@@ -30,13 +30,9 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "e2b-server": {
-      "command": "node",
-      "args": [
-        "<absolute-path-to-e2b-server>/js/build/index.js"
-      ],
-      "env": {
-        "E2B_API_KEY": "<your-e2b-api-key>"
-      }
+      "command": "npx",
+      "args": ["-y", "e2b-mcp-server"],
+      "env": { "E2B_API_KEY": "${e2bApiKey}" }
     }
   }
 }

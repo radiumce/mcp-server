@@ -15,8 +15,8 @@ Available in two editions:
 
 ### Installing via Smithery
 
-To install e2b for Claude Desktop automatically via [Smithery](https://smithery.ai/protocol/e2b):
+You can also install E2B for Claude Desktop automatically via [Smithery](https://smithery.ai/protocol/e2b):
 
-\`\`\`bash
+```bash
 npx @smithery/cli install e2b --client claude
-\`\`\`
+```

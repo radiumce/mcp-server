@@ -20,16 +20,9 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "e2b-mcp-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "<absolute-path-to-e2b-server>/python",
-        "run",
-        "e2b-mcp-server"
-      ],
-      "env": {
-        "E2B_API_KEY": "<your-e2b-api-key>"
-      }
+      "command": "uvx",
+      "args": ["e2b-mcp-server"],
+      "env": { "E2B_API_KEY": "${e2bApiKey}" }
     }
   }
 }

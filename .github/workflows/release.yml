@@ -1,39 +1,38 @@
-name: Publish Packages
+name: Release MCP Packages
 
 on:
-  workflow_call:
-    secrets:
-      NPM_TOKEN:
-        required: true
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   contents: write
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-20.04
+  is_release:
+    name: Is release?
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.version.outputs.release }}
     steps:
-      - uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ vars.VERSION_BUMPER_APPID }}
-          private-key: ${{ secrets.VERSION_BUMPER_SECRET }}
-
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          token: ${{ steps.app-token.outputs.token }}
 
-      - uses: pnpm/action-setup@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        id: pnpm-install
         with:
           version: 9.5
 
-      - name: Setup Node.js 18
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: "18.x"
+          registry-url: "https://registry.npmjs.org"
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Configure pnpm
         run: |
@@ -43,28 +42,64 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create new versions
-        run: pnpm run version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Release new versions
-        uses: changesets/action@v1
-        with:
-          publish: pnpm run publish
-          createGithubReleases: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Update lock file
-        run: pnpm i --no-link --no-frozen-lockfile
-
-      - name: Commit new versions
+      - name: Check if new version
+        id: version
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "[skip ci] Release new versions" || exit 0
-          git push
+          IS_RELEASE=$(./.github/scripts/is_release.sh)
+          echo "release=$IS_RELEASE" >> "$GITHUB_OUTPUT"
+
+  changes:
+    name: Repository changes
+    needs: [is_release]
+    if: needs.is_release.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      js-sdk: ${{ steps.filter.outputs.js-sdk }}
+      python-sdk: ${{ steps.filter.outputs.python-sdk }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get the last release
+        id: last_release
+        uses: cardinalby/git-get-release-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+          prerelease: false
+          draft: false
+
+      - name: Find changes since the last release
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          base: ${{ steps.last_release.outputs.tag_name }}
+          filters: |
+            js:
+              - 'packages/js/**'
+            python:
+              - 'packages/python/**'
+
+  publish:
+    name: Publish
+    needs: [is_release]
+    if: (!cancelled()) && !contains(needs.*.result, 'failure') && needs.is_release.outputs.release == 'true'
+    uses: ./.github/workflows/publish_packages.yml
+    secrets: inherit
+
+  report-failure:
+    needs: [publish]
+    if: failure()
+    name: Release Failed - Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Failed - Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: "#ff0000"
+          SLACK_MESSAGE: ":here-we-go-again: :bob-the-destroyer: We need :fix-parrot: ASAP :pray:"
+          SLACK_TITLE: Release Failed
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

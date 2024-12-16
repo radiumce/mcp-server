@@ -8,9 +8,9 @@ The E2B MCP server allows you to add [code interpreting capabilities](https://gi
 
 Available in two editions:
 
-- [JavaScript](js)
-  
-- [Python](python)
+- [JavaScript](packages/js/README.md)
+
+- [Python](packages/python/README.md)
 
 
 ### Installing via Smithery

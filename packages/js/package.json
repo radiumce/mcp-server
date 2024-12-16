@@ -1,11 +1,10 @@
 {
-  "name": "e2b-mcp-server",
+  "name": "@e2b/mcp-server",
   "version": "0.1.0",
   "description": "A Model Context Protocol server",
-  "private": true,
   "type": "module",
   "bin": {
-    "e2b-mcp-server": "./build/index.js"
+    "@e2b/mcp-server": "./build/index.js"
   },
   "files": [
     "build"

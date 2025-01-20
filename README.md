@@ -1,5 +1,5 @@
 # E2B MCP Server
-[![smithery badge](https://smithery.ai/badge/e2b)](https://smithery.ai/protocol/e2b)
+[![smithery badge](https://smithery.ai/badge/e2b)](https://smithery.ai/server/e2b)
 
 This repository contains the source code for the [E2B](https://e2b.dev) MCP server.
 
@@ -15,7 +15,7 @@ Available in two editions:
 
 ### Installing via Smithery
 
-You can also install E2B for Claude Desktop automatically via [Smithery](https://smithery.ai/protocol/e2b):
+You can also install E2B for Claude Desktop automatically via [Smithery](https://smithery.ai/server/e2b):
 
 ```bash
 npx @smithery/cli install e2b --client claude

@@ -31,4 +31,4 @@ ENV NODE_ENV=production
 # Define the environment variable for the API key
 ENV E2B_API_KEY=
 
-ENTRYPOINT ["npx", "-y", "e2b-mcp-server"]
+ENTRYPOINT ["node", "./dist/index.js"]

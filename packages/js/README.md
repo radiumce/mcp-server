@@ -31,7 +31,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
   "mcpServers": {
     "e2b-server": {
       "command": "npx",
-      "args": ["-y", "e2b-mcp-server"],
+      "args": ["-y", "@e2b/mcp-server"],
       "env": { "E2B_API_KEY": "${e2bApiKey}" }
     }
   }

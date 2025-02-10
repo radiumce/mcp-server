@@ -14,18 +14,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const API_KEY = process.env.E2B_API_KEY;
-if (!API_KEY) {
-  throw new Error("E2B_API_KEY environment variable is required");
-}
-
 const toolSchema = z.object({
   code: z.string(),
 });
 
 class E2BServer {
   private server: Server;
-  private sandbox: Sandbox | undefined;
 
   constructor() {
     this.server = new Server(
@@ -41,15 +35,8 @@ class E2BServer {
       }
     );
 
-    this.setupSandbox();
     this.setupHandlers();
     this.setupErrorHandling();
-  }
-
-  private async setupSandbox(): Promise<void> {
-    this.sandbox = await Sandbox.create({
-      apiKey: API_KEY,
-    });
   }
 
   private setupErrorHandling(): void {
@@ -96,7 +83,9 @@ class E2BServer {
       }
 
       const { code } = parsed.data;
-      const { results, logs } = await (this.sandbox as Sandbox).runCode(code);
+
+      const sandbox = await Sandbox.create();
+      const { results, logs } = await sandbox.runCode(code);
 
       return {
         content: [

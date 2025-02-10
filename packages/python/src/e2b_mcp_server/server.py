@@ -24,11 +24,6 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("e2b-mcp-server")
 
-# API configuration
-API_KEY = os.getenv("E2B_API_KEY")
-if not API_KEY:
-    raise ValueError("E2B_API_KEY environment variable required")
-
 # Tool schema
 class ToolSchema(BaseModel):
     code: str

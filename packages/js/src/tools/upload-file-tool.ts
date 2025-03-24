@@ -50,7 +50,7 @@ class UploadFileTool extends ToolHandler {
     }
 
     // 读取本地文件
-    const fileContent = await fs.readFile(normalizedPath, 'utf-8');
+    const fileContent = await fs.readFile(normalizedPath);
 
     const { sandbox, sessionId } = await this.getSandbox(session_id);
 

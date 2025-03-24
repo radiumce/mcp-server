@@ -1,10 +1,10 @@
 {
-  "name": "@e2b/mcp-server",
-  "version": "0.1.1",
+  "name": "@robotrix/e2b-mcp-server",
+  "version": "0.1.2",
   "description": "A Model Context Protocol server",
   "type": "module",
   "bin": {
-    "@e2b/mcp-server": "./build/index.js"
+    "@robotrix/e2b-mcp-server": "./build/index.js"
   },
   "files": [
     "build"

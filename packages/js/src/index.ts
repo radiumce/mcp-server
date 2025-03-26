@@ -10,6 +10,7 @@ import ReadFileTool from "./tools/read-file-tool.js";
 import WriteFileTool from "./tools/write-file-tool.js";
 import ExecuteCommandTool from "./tools/execute-command-tool.js";
 import UploadFileTool from "./tools/upload-file-tool.js";
+import DownloadFileTool from "./tools/download-file-tool.js";
 
 dotenv.config();
 
@@ -92,6 +93,7 @@ class E2BServer {
     const writeFileTool = new WriteFileTool(sandboxProvider);
     const executeCommandTool = new ExecuteCommandTool(sandboxProvider);
     const uploadFileTool = new UploadFileTool(sandboxProvider);
+    const downloadFileTool = new DownloadFileTool(sandboxProvider);
 
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
@@ -100,6 +102,7 @@ class E2BServer {
         writeFileTool.getToolDefinition(),
         executeCommandTool.getToolDefinition(),
         uploadFileTool.getToolDefinition(),
+        downloadFileTool.getToolDefinition(),
       ],
     }));
 
@@ -117,6 +120,8 @@ class E2BServer {
           return executeCommandTool.handle(request);
         case "upload_file":
           return uploadFileTool.handle(request);
+        case "download_file":
+          return downloadFileTool.handle(request);
         default:
           logger.error(`Unknown tool: ${toolName}`);
           return {

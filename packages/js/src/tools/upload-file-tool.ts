@@ -30,7 +30,7 @@ class UploadFileTool extends ToolHandler {
       sandbox_path = path.basename(local_path);
 
     // 验证本地路径是否在允许的目录中
-    const allowedPaths = process.env.E2B_ALLOWED_UPLOAD_PATHS?.split(',') || [];
+    const allowedPaths = process.env.E2B_ALLOWED_PATHS?.split(',') || [];
     if (allowedPaths.length === 0) {
       throw new Error("No allowed upload paths configured. Set E2B_ALLOWED_UPLOAD_PATHS environment variable.");
     }

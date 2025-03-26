@@ -1,5 +1,6 @@
 import { z } from "zod";
 import ToolHandler, { SandboxProvider } from "../tool-handler.js";
+import { CommandExitError } from "@e2b/code-interpreter";
 
 const commandSchema = z.object({
   command: z.string().describe("Full CLI command to execute"),
@@ -41,23 +42,38 @@ class ExecuteCommandTool extends ToolHandler {
       };
     } else {
       // For foreground processes
-      const result = await sandbox.commands.run(command, {
-        cwd,
-        envs,
-        timeoutMs: timeoutMs ?? 600000,
-        background: false
-      });
+      try {
+        const result = await sandbox.commands.run(command, {
+          cwd,
+          envs,
+          timeoutMs: timeoutMs ?? 600000,
+          background: false
+        });
 
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            stdout: result.stdout,
-            stderr: result.stderr,
-            session_id: sessionId
-          }, null, 2)
-        }]
-      };
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              stdout: result.stdout,
+              stderr: result.stderr,
+              session_id: sessionId
+            }, null, 2)
+          }]
+        };
+      } catch (error) {
+        if (error instanceof CommandExitError) {
+          const wrappedError = new Error(JSON.stringify({
+            code: "COMMAND_FAILED",
+            exitCode: error.exitCode,
+            stdout: error.stdout,
+            stderr: error.stderr,
+            message: `Command failed with code ${error.exitCode}`
+          }));
+          wrappedError.stack = error.stack;
+          throw wrappedError;
+        }
+        throw error;
+      }
     }
   }
 

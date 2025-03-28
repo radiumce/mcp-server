@@ -6,7 +6,7 @@ const commandSchema = z.object({
   command: z.string().describe("Full CLI command to execute"),
   cwd: z.string().optional().describe("Working directory (default: user's home)"),
   envs: z.record(z.string()).optional().describe("Environment variables as key-value pairs"),
-  timeoutMs: z.number().optional().describe("Execution timeout in milliseconds (default: 60000)"),
+  timeoutMs: z.number().optional().describe("Execution timeout in milliseconds (default: 600000)"),
   background: z.boolean().optional().describe("Run in background for long-running processes"),
   session_id: z.string().optional()
 });
@@ -26,7 +26,7 @@ class ExecuteCommandTool extends ToolHandler {
       const result = await sandbox.commands.run(command, {
         cwd,
         envs,
-        timeoutMs: timeoutMs ?? 600000,
+        timeoutMs: timeoutMs ?? 6000000,
         background: true
       });
 
@@ -46,7 +46,7 @@ class ExecuteCommandTool extends ToolHandler {
         const result = await sandbox.commands.run(command, {
           cwd,
           envs,
-          timeoutMs: timeoutMs ?? 600000,
+          timeoutMs: timeoutMs ?? 6000000,
           background: false
         });
 

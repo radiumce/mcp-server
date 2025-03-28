@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { Sandbox } from "@e2b/code-interpreter";
+import { Sandbox, SandboxOpts } from "@e2b/code-interpreter";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
@@ -77,7 +77,11 @@ class E2BServer {
 
     // Generate a new session ID if none provided or if the provided one doesn't exist
     const newSessionId = sessionId || `sess_${Math.random().toString(36).substring(2, 9)}`;
-    const sandbox = await Sandbox.create();
+    const sandboxOpts: SandboxOpts = {};
+    if (process.env.E2B_SANDBOX_TIMEOUT) {
+      sandboxOpts.timeoutMs = parseInt(process.env.E2B_SANDBOX_TIMEOUT, 10) * 1000;
+    }
+    const sandbox = await Sandbox.create(sandboxOpts);
     this.sessions.set(newSessionId, { sandbox, lastAccessed: Date.now() });
     logger.info(`Created new session: ${newSessionId}`);
     return { sandbox, sessionId: newSessionId };

@@ -13,7 +13,9 @@ This modified version enhances the JavaScript MCP Server with the following tool
 *   **`write_file`:** Allows the server to write data to files within the E2B Sandbox.
 *   **`read_file`:** Allows the server to read data from files within the E2B Sandbox.
 *   **`upload_file`:** Allows the server to upload files to the E2B Sandbox.
+*   **`download_file`:** Allows the server to download files from the E2B Sandbox to local system (only to allowed paths).
 *   **`execute_command`:** Allows the server to execute shell commands within the E2B Sandbox.
+*   **`run_code`:** Allows the server to run Python code in a secure remote sandbox using Jupyter Notebook syntax.
 
 - [JavaScript](packages/js/README.md)
 

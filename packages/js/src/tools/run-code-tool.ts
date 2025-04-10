@@ -16,7 +16,7 @@ class RunCodeTool extends ToolHandler {
     const { code, session_id } = args;
     const { sandbox, sessionId } = await this.getSandbox(session_id);
     const exe_res = await sandbox.runCode(code);
-    const { results, logs, error } = exe_res;
+    const {logs, error } = exe_res;
 
     return {
       content: [
@@ -24,7 +24,6 @@ class RunCodeTool extends ToolHandler {
           type: "text",
           text: JSON.stringify({
             error,
-            results,
             logs,
             session_id: sessionId
           }, null, 2),
